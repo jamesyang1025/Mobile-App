@@ -7,44 +7,88 @@
  * @lint-ignore-every XPLATJSCOPYRIGHT1
  */
 
+'use strict';
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
+import {
+  createAppContainer,
+  createBottomTabNavigator,
+} from 'react-navigation';
+import Profile from './Profile';
+import Repositories from './Repositories';
+import Following from './Following';
+import Followers from './Followers';
+import Icon from 'react-native-vector-icons/Octicons';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+
+const TabNavigator = createBottomTabNavigator({
+  Repositories: {
+    screen: Repositories,
+    navigationOptions: {
+      tabBarIcon: ({ focused, tintColor }) => {
+        return <Icon name={'mark-github'} size={25} color={tintColor} />;
+      },
+    }
+  },
+
+  Following: {
+    screen: Following,
+    navigationOptions: {
+      tabBarIcon: ({ focused, tintColor }) => {
+        return <Icon name={'heart'} size={25} color={tintColor} />;
+      },
+    }
+  },
+
+  Followers: {
+    screen: Followers,
+    navigationOptions: {
+      tabBarIcon: ({ focused, tintColor }) => {
+        return <Icon name={'organization'} size={25} color={tintColor} />;
+      },
+    }
+  },
+
+  Profile: {
+    screen: Profile,
+    navigationOptions: {
+      tabBarIcon: ({ focused, tintColor }) => {
+        return <Icon name={'person'} size={25} color={tintColor} />;
+      },
+    }
+  },
+
+},{
+  tabBarOptions: {
+    activeTintColor: 'black',
+    activeBackgroundColor: 'white',
+    inactiveTintColor: 'grey',
+    inactiveBackgroundColor: '#87CEEB',
+    showIcon: true,
+    showLabel: false,
+    labelStyle: {
+      fontSize: 18,
+    },
+    style: {
+
+    },
+  }
+})
 
 type Props = {};
-export default class App extends Component<Props> {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
-      </View>
-    );
-  }
-}
+
+const App = createAppContainer(TabNavigator)
+export default App;
+
+
+
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
+  description: {
+    fontSize: 18,
     textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
+    color: '#656565',
+    marginTop: 65,
   },
 });
+
