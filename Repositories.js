@@ -9,13 +9,16 @@ import {
     FlatList,
     Text,
 } from 'react-native';
+import {Header} from "react-native-elements";
 
 type Props = {};
 export default class Repositories extends Component<Props> {
     render(){
         return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text>Repositories Page!</Text>
+            <View style={{ flex: 1}}>
+                <Header
+                    centerComponent={{ text: 'Repositories', style: { color: '#fff' } }}
+                />
             </View>
         );
     }
