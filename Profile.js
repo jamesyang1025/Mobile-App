@@ -11,10 +11,12 @@ import {
     FlatList,
     Text,
     ImageBackground,
+    ScrollView,
 } from 'react-native';
 import {Header} from "react-native-elements";
 import axios from 'axios';
 import Moment from 'moment';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
 
 type Props = {};
 export default class Profile extends Component<Props> {
@@ -81,7 +83,7 @@ export default class Profile extends Component<Props> {
                 source={require('./Resources/Background.jpg')}
                 style={styles.background}
             >
-                <View style={{ flex: 1}}>
+                <ScrollView style={{ flex: 1}}>
                     <Header
                         centerComponent={{ text: 'Profile', style: styles.header }}
                     />
@@ -119,7 +121,7 @@ export default class Profile extends Component<Props> {
                         <Text style={styles.prompt}>Since</Text>
                         <Text style={styles.numText}>{Moment(this.state.profileCreatedDate).format('MM/DD/YYYY')}</Text>
                     </View>
-                </View>
+                </ScrollView>
             </ImageBackground>
 
 
@@ -137,9 +139,9 @@ const styles = StyleSheet.create({
         resizeMode: 'cover',
     },
     avatar: {
-        width: 80,
-        height: 80,
-        marginTop: 70,
+        width: wp('22%'),
+        height: hp('12.5%'),
+        marginTop: hp('10%'),
         alignSelf: 'center',
 
     },
@@ -162,15 +164,15 @@ const styles = StyleSheet.create({
         color: '#FFFFF0',
     },
     prompt: {
-        marginLeft: 10,
+        marginLeft: wp('2.5%'),
         fontSize: 20,
         color: '#FFFF00',
     },
     flowRight: {
         flexDirection: 'row',
         alignItems: 'center',
-        alignSelf: 'stretch',
-        marginTop: 5,
+        alignSelf: 'center',
+        marginTop: hp('2.5%'),
     },
 });
 
