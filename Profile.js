@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import {Header} from "react-native-elements";
 import axios from 'axios';
+import Moment from 'moment';
 
 type Props = {};
 export default class Profile extends Component<Props> {
@@ -108,9 +109,9 @@ export default class Profile extends Component<Props> {
                             </View>
                         </TouchableOpacity>
                     </View>
-                    <View style={{flexDirection: 'row'}}>
-                        <Text style={styles.prompt}>Created at</Text>
-                        <Text style={styles.numText}>{this.state.profileCreatedDate}</Text>
+                    <View style={{flexDirection: 'row', justifyContent: 'center', marginTop: 5}}>
+                        <Text style={styles.prompt}>Since</Text>
+                        <Text style={styles.numText}>{Moment(this.state.profileCreatedDate).format('MM/DD/YYYY')}</Text>
                     </View>
                 </View>
             </ImageBackground>
@@ -132,32 +133,32 @@ const styles = StyleSheet.create({
     avatar: {
         width: 80,
         height: 80,
-        marginTop: 20,
+        marginTop: 70,
         alignSelf: 'center',
 
     },
     name: {
-        fontSize: 20,
+        fontSize: 24,
         fontWeight: 'bold',
         alignSelf: 'center',
         color: '#F5F5DC'
     },
     username: {
-        fontSize: 18,
+        fontSize: 20,
         alignSelf: 'center',
-        color: '#F5F5DC'
+        color: '#A52A2A'
     },
     numText: {
         fontSize: 20,
         flexDirection: 'row',
         paddingLeft: 10,
         fontWeight: 'bold',
-        color: '#FFFAFA',
+        color: '#FFFFF0',
     },
     prompt: {
         marginLeft: 10,
         fontSize: 20,
-        color: '#EEE8AA',
+        color: '#FFFF00',
     },
     flowRight: {
         flexDirection: 'row',
