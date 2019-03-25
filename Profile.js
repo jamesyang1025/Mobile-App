@@ -8,6 +8,8 @@ import {
     TouchableHighlight,
     FlatList,
     Text,
+    ImageBackground,
+    TouchableOpacity,
 } from 'react-native';
 import {Header} from "react-native-elements";
 import axios from 'axios';
@@ -68,14 +70,52 @@ export default class Profile extends Component<Props> {
             );
         }
         return (
-            <View style={{ flex: 1}}>
-                <Header
-                    centerComponent={{ text: 'Profile', style: styles.header }}
-                />
-                <Image source={{uri: this.state.avatar}} style={styles.avatar} />
-                <Text style={styles.name}>{this.state.name}</Text>
-                <Text style={styles.username}>{this.state.username}</Text>
-            </View>
+            <ImageBackground
+                source={require('./Resources/Background.jpg')}
+                style={styles.background}
+            >
+                <View style={{ flex: 1}}>
+                    <Header
+                        centerComponent={{ text: 'Profile', style: styles.header }}
+                    />
+
+                    <Image source={{uri: this.state.avatar}} style={styles.avatar} />
+                    <Text style={styles.name}>{this.state.name}</Text>
+                    <Text style={styles.username}>{this.state.username}</Text>
+                    <View style={styles.flowRight}>
+                        <TouchableOpacity
+                            onPress={() => this.props.navigation.navigate('Repositories')}
+                        >
+                            <View style={{flexDirection: 'row'}}>
+                                <Text style={styles.prompt}>Repositories</Text>
+                                <Text style={styles.numText}>{this.state.publicReposCount}</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => this.props.navigation.navigate('Following')}
+                        >
+                            <View style={{flexDirection: 'row'}}>
+                                <Text style={styles.prompt}>Following</Text>
+                                <Text style={styles.numText}>{this.state.followingCount}</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => this.props.navigation.navigate('Followers')}
+                        >
+                            <View style={{flexDirection: 'row'}}>
+                                <Text style={styles.prompt}>Followers</Text>
+                                <Text style={styles.numText}>{this.state.followersCount}</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{flexDirection: 'row'}}>
+                        <Text style={styles.prompt}>Created at</Text>
+                        <Text style={styles.numText}>{this.state.profileCreatedDate}</Text>
+                    </View>
+                </View>
+            </ImageBackground>
+
+
         );
     }
 }
@@ -85,10 +125,13 @@ const styles = StyleSheet.create({
         fontSize: 25,
         color: '#fff',
     },
+    background: {
+        flex: 1,
+        resizeMode: 'cover',
+    },
     avatar: {
         width: 80,
         height: 80,
-        marginRight: 20,
         marginTop: 20,
         alignSelf: 'center',
 
@@ -97,11 +140,31 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         alignSelf: 'center',
+        color: '#F5F5DC'
     },
     username: {
-        fontSize: 15,
+        fontSize: 18,
         alignSelf: 'center',
-    }
+        color: '#F5F5DC'
+    },
+    numText: {
+        fontSize: 20,
+        flexDirection: 'row',
+        paddingLeft: 10,
+        fontWeight: 'bold',
+        color: '#FFFAFA',
+    },
+    prompt: {
+        marginLeft: 10,
+        fontSize: 20,
+        color: '#EEE8AA',
+    },
+    flowRight: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignSelf: 'stretch',
+        marginTop: 5,
+    },
 });
 
 
