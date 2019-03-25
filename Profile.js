@@ -1,5 +1,7 @@
 'use strict';
 
+//Reference: https://www.raywenderlich.com/247-react-native-tutorial-building-android-apps-with-javascript
+
 import React, { Component } from 'react'
 import {
     StyleSheet,
@@ -9,7 +11,6 @@ import {
     FlatList,
     Text,
     ImageBackground,
-    TouchableOpacity,
 } from 'react-native';
 import {Header} from "react-native-elements";
 import axios from 'axios';
@@ -37,7 +38,13 @@ export default class Profile extends Component<Props> {
     }
 
     componentDidMount(){
-        axios.get('https://api.github.com/users/jamesyang1025')
+        axios.get('https://api.github.com/users/jamesyang1025',
+            {
+                auth: {
+                    username: 'jamesyang1025',
+                    password: 'James15977997207'
+                }
+            })
             .then(response => {
                 this.setState({
                     isLoading: false,
@@ -52,7 +59,6 @@ export default class Profile extends Component<Props> {
                     followingCount: response.data.following,
                     profileCreatedDate: response.data.created_at,
                 });
-                console.log(response.data);
             })
             .catch(error => this.setState({
                 isLoading: false,
@@ -84,30 +90,30 @@ export default class Profile extends Component<Props> {
                     <Text style={styles.name}>{this.state.name}</Text>
                     <Text style={styles.username}>{this.state.username}</Text>
                     <View style={styles.flowRight}>
-                        <TouchableOpacity
+                        <TouchableHighlight
                             onPress={() => this.props.navigation.navigate('Repositories')}
                         >
                             <View style={{flexDirection: 'row'}}>
                                 <Text style={styles.prompt}>Repositories</Text>
                                 <Text style={styles.numText}>{this.state.publicReposCount}</Text>
                             </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity
+                        </TouchableHighlight>
+                        <TouchableHighlight
                             onPress={() => this.props.navigation.navigate('Following')}
                         >
                             <View style={{flexDirection: 'row'}}>
                                 <Text style={styles.prompt}>Following</Text>
                                 <Text style={styles.numText}>{this.state.followingCount}</Text>
                             </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity
+                        </TouchableHighlight>
+                        <TouchableHighlight
                             onPress={() => this.props.navigation.navigate('Followers')}
                         >
                             <View style={{flexDirection: 'row'}}>
                                 <Text style={styles.prompt}>Followers</Text>
                                 <Text style={styles.numText}>{this.state.followersCount}</Text>
                             </View>
-                        </TouchableOpacity>
+                        </TouchableHighlight>
                     </View>
                     <View style={{flexDirection: 'row', justifyContent: 'center', marginTop: 5}}>
                         <Text style={styles.prompt}>Since</Text>
