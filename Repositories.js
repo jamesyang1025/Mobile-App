@@ -17,9 +17,16 @@ export default class Repositories extends Component<Props> {
         return (
             <View style={{ flex: 1}}>
                 <Header
-                    centerComponent={{ text: 'Repositories', style: { color: '#fff' } }}
+                    centerComponent={{ text: 'Repositories', style: styles.header }}
                 />
             </View>
         );
     }
 }
+
+const styles = StyleSheet.create({
+    header: {
+        fontSize: 25,
+        color: '#fff',
+    }
+});

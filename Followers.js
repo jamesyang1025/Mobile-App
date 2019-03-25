@@ -17,9 +17,16 @@ export default class Followers extends Component<Props> {
         return (
             <View style={{ flex: 1}}>
                 <Header
-                    centerComponent={{ text: 'Followers', style: { color: '#fff' } }}
+                    centerComponent={{ text: 'Followers', style: styles.header }}
                 />
             </View>
         );
     }
 }
+
+const styles = StyleSheet.create({
+    header: {
+        fontSize: 25,
+        color: '#fff',
+    }
+});
