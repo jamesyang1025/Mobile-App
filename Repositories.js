@@ -16,6 +16,8 @@ import {
 import {Header, ListItem} from "react-native-elements";
 import axios from 'axios';
 
+axios.defaults.headers.common['Authorization'] = '11f5a557061c349f92722d986a62af8072bc1f21';
+
 type Props = {};
 export default class Repositories extends Component<Props> {
 
@@ -28,13 +30,7 @@ export default class Repositories extends Component<Props> {
     }
 
     componentDidMount(){
-        axios.get('https://api.github.com/users/jamesyang1025/repos',
-            {
-                auth: {
-                    username: 'jamesyang1025',
-                    password: 'James15977997207'
-                }
-            })
+        axios.get('https://api.github.com/users/jamesyang1025/repos')
             .then(response => {
                 this.setState({
                     isLoading: false,
