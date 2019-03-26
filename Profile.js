@@ -17,6 +17,9 @@ import {Header} from "react-native-elements";
 import axios from 'axios';
 import Moment from 'moment';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
+import {NavigationActions} from "react-navigation";
+
+axios.defaults.headers.common['Authorization'] = '11f5a557061c349f92722d986a62af8072bc1f21';
 
 type Props = {};
 export default class Profile extends Component<Props> {
@@ -39,14 +42,14 @@ export default class Profile extends Component<Props> {
         }
     }
 
-    componentDidMount(){
-        axios.get('https://api.github.com/users/jamesyang1025',
-            {
-                auth: {
-                    username: 'jamesyang1025',
-                    password: 'James15977997207'
-                }
-            })
+    componentWillReceiveProps(nextProps){
+        const username = nextProps.navigation.getParam('username', 'jamesyang1025');
+
+        this.ApiGetProfile(username);
+    }
+
+    ApiGetProfile(username) {
+        axios.get('https://api.github.com/users/' + username)
             .then(response => {
                 this.setState({
                     isLoading: false,
@@ -68,11 +71,19 @@ export default class Profile extends Component<Props> {
             }));
     }
 
+    componentDidMount(){
+
+        const username = this.props.navigation.getParam('username', 'jamesyang1025');
+
+        this.ApiGetProfile(username)
+    }
+
     render(){
         if(this.state.isLoading){
             return (
                 <View style={{ flex: 1}}>
                     <Header
+                        leftComponent={{icon: 'chevron-left', onPress: () => this.props.navigation.goBack(), color: '#fff', size: 32}}
                         centerComponent={{ text: 'Profile', style: styles.header }}
                     />
                 </View>
@@ -85,23 +96,34 @@ export default class Profile extends Component<Props> {
             >
                 <ScrollView style={{ flex: 1}}>
                     <Header
+                        leftComponent={{icon: 'chevron-left', onPress: () => this.props.navigation.goBack(), color: '#fff', size: 32}}
                         centerComponent={{ text: 'Profile', style: styles.header }}
+                        rightComponent={{icon: 'home', onPress: () => {
+                                const navigateActions = NavigationActions.setParams({key: 'Repositories', params: {username: 'jamesyang1025'},});
+                                this.props.navigation.dispatch(navigateActions);
+                                const navigateActions2 = NavigationActions.setParams({key: 'Following', params: {username: 'jamesyang1025'},});
+                                this.props.navigation.dispatch(navigateActions2);
+                                const navigateActions3 = NavigationActions.setParams({key: 'Followers', params: {username: 'jamesyang1025'},});
+                                this.props.navigation.dispatch(navigateActions3);
+                                const navigateActions4 = NavigationActions.setParams({key: 'Profile', params: {username: 'jamesyang1025'},});
+                                this.props.navigation.dispatch(navigateActions4);
+                            }, color: '#fff', size: 32}}
                     />
 
-                    <Image source={{uri: this.state.avatar}} style={styles.avatar} />
+                    <Image source={{uri: this.state.avatar + '?' + new Date()}} style={styles.avatar}/>
                     <Text style={styles.name}>{this.state.name}</Text>
                     <Text style={styles.username}>{this.state.username}</Text>
                     <View style={styles.flowRight}>
                         <TouchableHighlight
-                            onPress={() => this.props.navigation.navigate('Repositories')}
+                            onPress={() => this.props.navigation.navigate('Repositories', {username: this.state.username})}
                         >
                             <View style={{flexDirection: 'row'}}>
-                                <Text style={styles.prompt}>Repositories</Text>
+                                <Text style={styles.prompt}>Repos</Text>
                                 <Text style={styles.numText}>{this.state.publicReposCount}</Text>
                             </View>
                         </TouchableHighlight>
                         <TouchableHighlight
-                            onPress={() => this.props.navigation.navigate('Following')}
+                            onPress={() => this.props.navigation.navigate('Following', {username: this.state.username})}
                         >
                             <View style={{flexDirection: 'row'}}>
                                 <Text style={styles.prompt}>Following</Text>
@@ -109,7 +131,7 @@ export default class Profile extends Component<Props> {
                             </View>
                         </TouchableHighlight>
                         <TouchableHighlight
-                            onPress={() => this.props.navigation.navigate('Followers')}
+                            onPress={() => this.props.navigation.navigate('Followers', {username: this.state.username})}
                         >
                             <View style={{flexDirection: 'row'}}>
                                 <Text style={styles.prompt}>Followers</Text>
@@ -139,8 +161,8 @@ const styles = StyleSheet.create({
         resizeMode: 'cover',
     },
     avatar: {
-        width: wp('22%'),
-        height: hp('12.5%'),
+        width: wp('44%'),
+        height: hp('25%'),
         marginTop: hp('10%'),
         alignSelf: 'center',
 
@@ -172,7 +194,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         alignSelf: 'center',
-        marginTop: hp('2.5%'),
     },
 });
 
