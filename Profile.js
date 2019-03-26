@@ -12,6 +12,7 @@ import {
     Text,
     ImageBackground,
     ScrollView,
+    AsyncStorage,
 } from 'react-native';
 import {Header} from "react-native-elements";
 import axios from 'axios';
@@ -46,6 +47,8 @@ export default class Profile extends Component<Props> {
         const username = nextProps.navigation.getParam('username', 'jamesyang1025');
 
         this.ApiGetProfile(username);
+
+        this.saveData('Follwing', this.state.data);
     }
 
     ApiGetProfile(username) {
@@ -76,6 +79,19 @@ export default class Profile extends Component<Props> {
         const username = this.props.navigation.getParam('username', 'jamesyang1025');
 
         this.ApiGetProfile(username)
+
+        this.saveData('name', this.state.name);
+        this.saveData('username', this.state.username);
+        this.saveData('avatar', this.state.avatar);
+
+    }
+
+    async saveData(key, value) {
+        try{
+            await AsyncStorage.setItem(key, value);
+        }catch (error) {
+            console.log("error" + error);
+        }
     }
 
     render(){

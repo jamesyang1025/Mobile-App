@@ -12,7 +12,7 @@ import {
     ImageBackground,
     Linking,
     ScrollView,
-    Button,
+    Button, AsyncStorage,
 } from 'react-native';
 import {
     NavigationActions,
@@ -38,6 +38,8 @@ export default class Followers extends Component<Props> {
         const username = nextProps.navigation.getParam('username', 'jamesyang1025');
 
         this.ApiGetFollowers(username);
+
+        this.saveData('Follwing', this.state.data);
     }
 
     ApiGetFollowers(username) {
@@ -109,11 +111,21 @@ export default class Followers extends Component<Props> {
         })
     }
 
+    async saveData(key, value) {
+        try{
+            await AsyncStorage.setItem(key, value);
+        }catch (error) {
+            console.log("error" + error);
+        }
+    }
+
     componentDidMount(){
 
         const username = this.props.navigation.getParam('username', 'jamesyang1025');
 
         this.ApiGetFollowers(username);
+
+        this.saveData('Followers', this.state.data);
     }
 
 

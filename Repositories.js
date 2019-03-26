@@ -13,7 +13,7 @@ import {
     Text,
     Linking,
     ImageBackground,
-    ScrollView
+    ScrollView, AsyncStorage
 } from 'react-native';
 import {Header, ListItem} from "react-native-elements";
 import axios from 'axios';
@@ -37,6 +37,8 @@ export default class Repositories extends Component<Props> {
         const username = nextProps.navigation.getParam('username', 'jamesyang1025');
 
         this.ApiGetRepos(username);
+
+        this.saveData('Follwing', this.state.data);
     }
 
     ApiGetRepos(username) {
@@ -118,11 +120,21 @@ export default class Repositories extends Component<Props> {
         })
     }
 
+    async saveData(key, value) {
+        try{
+            await AsyncStorage.setItem(key, value);
+        }catch (error) {
+            console.log("error" + error);
+        }
+    }
+
     componentDidMount(){
 
         const username = this.props.navigation.getParam('username', 'jamesyang1025');
 
         this.ApiGetRepos(username);
+
+        this.saveData('Repositories', this.state.data);
     }
 
     displayColor(ownerName, repoName) {

@@ -9,7 +9,7 @@ import {
     FlatList,
     Text,
     ImageBackground,
-    ScrollView, Linking, Button,
+    ScrollView, Linking, Button, AsyncStorage,
 } from 'react-native';
 import {
     NavigationActions,
@@ -36,6 +36,8 @@ export default class Following extends Component<Props> {
         const username = nextProps.navigation.getParam('username', 'jamesyang1025');
 
         this.ApiGetFollowing(username);
+
+        this.saveData('Follwing', this.state.data);
     }
 
     ApiGetFollowing(username) {
@@ -102,7 +104,13 @@ export default class Following extends Component<Props> {
         })
     }
 
-
+    async saveData(key, value) {
+        try{
+            await AsyncStorage.setItem(key, value);
+        }catch (error) {
+            console.log("error" + error);
+        }
+    }
 
 
     componentDidMount(){
@@ -110,6 +118,8 @@ export default class Following extends Component<Props> {
         const username = this.props.navigation.getParam('username', 'jamesyang1025');
 
         this.ApiGetFollowing(username)
+
+        this.saveData('Follwing', this.state.data);
     }
 
     renderItem = ({item}) => (
