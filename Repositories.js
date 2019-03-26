@@ -46,12 +46,76 @@ export default class Repositories extends Component<Props> {
                     isLoading: false,
                     data: response.data,
                 });
+                console.log(this.state.data);
             })
             .catch(error => {this.setState({
                 isLoading: false,
                 message: 'Get request failed ' + error
             });
             console.log(error.response)});
+    }
+
+    static CheckStatus(response){
+        if(response.status == 204)
+            return true;
+        return false;
+    }
+
+    static async checkStar(ownerName, repoName) {
+        try{
+            const data = await axios.get('https://api.github.com/user/starred/' + ownerName + '/' + repoName + '?' + new Date());
+            console.log(data);
+            return data;
+        }catch (error) {
+            console.log("error", error);
+            return error.response;
+        }
+    }
+
+
+    ApiCheckStar(ownerName, repoName){
+        this.setState({
+            isLoading: true,
+        }, () => {
+            axios.get('https://api.github.com/user/starred/' + ownerName + '/' + repoName + '?' + new Date())
+                .then(response => {
+                    this.ApiUnstar(ownerName, repoName);
+                }).catch(error => {
+                    this.ApiStar(ownerName, repoName);
+            })
+        })
+    }
+
+    ApiStar(ownerName, repoName){
+        axios.put('https://api.github.com/user/starred/' + ownerName + '/' + repoName + '?' + new Date())
+            .then(response => {
+                this.setState({
+                    isLoading: false,
+                }, () => {
+                    this.ApiGetRepos(this.props.navigation.getParam('username', 'jamesyang1025'));
+                })
+            }).catch(error => {
+                this.setState({
+                    isLoading: false,
+                    message: 'Put request failed ' + error,
+                })
+        })
+    }
+
+    ApiUnstar(ownerName, repoName){
+        axios.delete('https://api.github.com/user/starred/' + ownerName + '/' + repoName + '?' + new Date())
+            .then(response => {
+                this.setState({
+                    isLoading: false,
+                }, () => {
+                    this.ApiGetRepos(this.props.navigation.getParam('username', 'jamesyang1025'));
+                })
+            }).catch(error => {
+            this.setState({
+                isLoading: false,
+                message: 'Put request failed ' + error,
+            })
+        })
     }
 
     componentDidMount(){
@@ -61,7 +125,14 @@ export default class Repositories extends Component<Props> {
         this.ApiGetRepos(username);
     }
 
-    changeColor = () => this.setState({starColor: '#FFD700'});
+    displayColor(ownerName, repoName) {
+        Repositories.checkStar(ownerName, repoName).then(response => {
+            if(response.status == 204){
+                return '#FFD700';
+            }
+        })
+        return '#808080';
+    }
 
     renderItem = ({item}) => (
         <ListItem
@@ -77,7 +148,8 @@ export default class Repositories extends Component<Props> {
                 </View>
             }
             onPress={() => Linking.openURL(item.html_url)}
-            rightIcon={{name: 'star', onPress: () => {console.log('icon pressed')}}}
+            rightIcon={{name: 'star', onPress: () => {this.ApiCheckStar(item.owner.login, item.name)},
+                color: this.displayColor(item.owner.login, item.name)}}
         />
     );
 
@@ -150,4 +222,10 @@ const styles = StyleSheet.create({
         flex: 1,
         resizeMode: 'cover',
     },
+    unstarColor: {
+        color: '#808080',
+    },
+    starColor: {
+        color: '#FFD700',
+    }
 });
