@@ -11,7 +11,8 @@ import {
     TouchableOpacity,
     ImageBackground,
     Linking,
-    ScrollView
+    ScrollView,
+    Button,
 } from 'react-native';
 import {
     NavigationActions,
@@ -19,7 +20,7 @@ import {
 import {Header, ListItem} from "react-native-elements";
 import axios from "axios";
 
-axios.defaults.headers.common['Authorization'] = '11f5a557061c349f92722d986a62af8072bc1f21';
+axios.defaults.headers.common['Authorization'] = 'token 11f5a557061c349f92722d986a62af8072bc1f21';
 
 type Props = {};
 export default class Followers extends Component<Props> {
@@ -40,17 +41,72 @@ export default class Followers extends Component<Props> {
     }
 
     ApiGetFollowers(username) {
-        axios.get('https://api.github.com/users/' + username + '/followers')
+        axios.get('https://api.github.com/users/' + username + '/followers' + '?' + new Date())
             .then(response => {
                 this.setState({
                     isLoading: false,
                     data: response.data,
                 });
             })
-            .catch(error => this.setState({
+            .catch(error => {this.setState({
                 isLoading: false,
                 message: 'Get request failed ' + error
-            }));
+            });
+            console.log(error.response)});
+    }
+
+    ApiFollow(username) {
+
+        axios.put('https://api.github.com/user/following/' + username + '?' + new Date())
+            .then(response => {
+                this.setState({
+                    isLoading: false,
+                }, () => {
+                    this.ApiGetFollowers(this.props.navigation.getParam('username', 'jamesyang1025'));
+                    let navigateActions = NavigationActions.setParams({key: 'Profile', params: {username: 'jamesyang1025'},});
+                    this.props.navigation.dispatch(navigateActions);
+                    const navigateActions2 = NavigationActions.setParams({key: 'Following', params: {username: 'jamesyang1025'},});
+                    this.props.navigation.dispatch(navigateActions2);
+                })
+            }).catch(error => {
+            this.setState({
+                isLoading: false,
+                message: 'Put request failed ' + error,
+            });
+        })
+    }
+
+    ApiUnfollow(username){
+        axios.delete('https://api.github.com/user/following/' + username + '?' + new Date())
+            .then(response => {
+                this.setState({
+                    isLoading: false,
+                }, () => {
+                    this.ApiGetFollowers(this.props.navigation.getParam('username', 'jamesyang1025'));
+                    let navigateActions = NavigationActions.setParams({key: 'Profile', params: {username: 'jamesyang1025'},});
+                    this.props.navigation.dispatch(navigateActions);
+                    const navigateActions2 = NavigationActions.setParams({key: 'Following', params: {username: 'jamesyang1025'},});
+                    this.props.navigation.dispatch(navigateActions2);
+                })
+            }).catch(error => {
+            this.setState({
+                isLoading: false,
+                message: 'Put request failed ' + error,
+            });
+        })
+    }
+
+    ApiCheckFollow(username){
+        this.setState({
+            isLoading: true,
+        }, () => {
+            axios.get('https://api.github.com/users/jamesyang1025/following/' + username + '?' + new Date())
+                .then(response => {
+                    this.ApiUnfollow(username);
+                }).catch(error => {
+                this.ApiFollow(username);
+            })
+        })
     }
 
     componentDidMount(){
@@ -77,6 +133,9 @@ export default class Followers extends Component<Props> {
                 const navigateActions3 = NavigationActions.setParams({key: 'Followers', params: {username: item.login},});
                 this.props.navigation.dispatch(navigateActions3);
             }}
+            rightElement={
+                <Button title={'Follow / Unfollow'} onPress={() => {this.ApiCheckFollow(item.login)}}/>
+            }
         />
     );
 

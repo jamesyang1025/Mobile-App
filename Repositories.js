@@ -19,7 +19,7 @@ import {Header, ListItem} from "react-native-elements";
 import axios from 'axios';
 import {NavigationActions} from "react-navigation";
 
-axios.defaults.headers.common['Authorization'] = '11f5a557061c349f92722d986a62af8072bc1f21';
+axios.defaults.headers.common['Authorization'] = 'token 11f5a557061c349f92722d986a62af8072bc1f21';
 
 type Props = {};
 export default class Repositories extends Component<Props> {
@@ -40,17 +40,18 @@ export default class Repositories extends Component<Props> {
     }
 
     ApiGetRepos(username) {
-        axios.get('https://api.github.com/users/' + username + '/repos')
+        axios.get('https://api.github.com/users/' + username + '/repos' + '?' + new Date())
             .then(response => {
                 this.setState({
                     isLoading: false,
                     data: response.data,
                 });
             })
-            .catch(error => this.setState({
+            .catch(error => {this.setState({
                 isLoading: false,
                 message: 'Get request failed ' + error
-            }));
+            });
+            console.log(error.response)});
     }
 
     componentDidMount(){
@@ -59,6 +60,8 @@ export default class Repositories extends Component<Props> {
 
         this.ApiGetRepos(username);
     }
+
+    changeColor = () => this.setState({starColor: '#FFD700'});
 
     renderItem = ({item}) => (
         <ListItem
@@ -74,7 +77,7 @@ export default class Repositories extends Component<Props> {
                 </View>
             }
             onPress={() => Linking.openURL(item.html_url)}
-            rightIcon={{name: 'star'}}
+            rightIcon={{name: 'star', onPress: () => {console.log('icon pressed')}}}
         />
     );
 

@@ -19,7 +19,7 @@ import Moment from 'moment';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
 import {NavigationActions} from "react-navigation";
 
-axios.defaults.headers.common['Authorization'] = '11f5a557061c349f92722d986a62af8072bc1f21';
+axios.defaults.headers.common['Authorization'] = 'token 11f5a557061c349f92722d986a62af8072bc1f21';
 
 type Props = {};
 export default class Profile extends Component<Props> {
@@ -49,7 +49,7 @@ export default class Profile extends Component<Props> {
     }
 
     ApiGetProfile(username) {
-        axios.get('https://api.github.com/users/' + username)
+        axios.get('https://api.github.com/users/' + username + '?' + new Date())
             .then(response => {
                 this.setState({
                     isLoading: false,
