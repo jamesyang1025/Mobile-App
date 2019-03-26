@@ -57,19 +57,11 @@ export default class Repositories extends Component<Props> {
             console.log(error.response)});
     }
 
-    static CheckStatus(response){
-        if(response.status == 204)
-            return true;
-        return false;
-    }
-
     static async checkStar(ownerName, repoName) {
         try{
             const data = await axios.get('https://api.github.com/user/starred/' + ownerName + '/' + repoName + '?' + new Date());
-            console.log(data);
             return data;
         }catch (error) {
-            console.log("error", error);
             return error.response;
         }
     }
@@ -138,12 +130,13 @@ export default class Repositories extends Component<Props> {
     }
 
     displayColor(ownerName, repoName) {
-        Repositories.checkStar(ownerName, repoName).then(response => {
-            if(response.status == 204){
+        Repositories.checkStar(ownerName, repoName).then(data => {
+            if(data.status === '204')
                 return '#FFD700';
-            }
+            return '#808080';
+        }).catch(error => {
+            console.log("error");
         })
-        return '#808080';
     }
 
     renderItem = ({item}) => (
