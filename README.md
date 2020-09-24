@@ -1,2 +1,3 @@
-# sp19-cs242-assignment3
+# Mobile-App
 
+A mobile app for github. More details in Manual_Test_Plan.pdf
